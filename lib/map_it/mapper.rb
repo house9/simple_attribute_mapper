@@ -5,6 +5,8 @@ module MapIt
     end
 
     def map(source, target_class)
+      raise UnMappableError.new("source has no attributes") unless source.respond_to?(:attributes)
+
       target = target_class.new
 
       source.attributes.each do |attribute|
