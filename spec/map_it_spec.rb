@@ -51,12 +51,14 @@ describe MapIt::Mapper do
 
       attribute :baz, String
       attribute :foo, String
+      attribute :abc, String
     end
 
     class Bar
       include Virtus
 
       attribute :baz, String
+      attribute :xyz, String
     end
 
     it "raises error when no source has no attributes" do
@@ -75,6 +77,13 @@ describe MapIt::Mapper do
       foo = Foo.new({baz: "BAZ", foo: "FOO"})
       bar = mapper.map(foo, Bar)
       bar.baz.respond_to?(:foo).should be_false
+    end
+
+    it "maps specified attributes" do
+      mapper = MapIt::Mapper.new({:abc => :xyz})
+      foo = Foo.new({baz: "BAZ", foo: "FOO", abc: "ABC"})
+      bar = mapper.map(foo, Bar)
+      bar.xyz.should == "ABC"
     end
   end
 end
