@@ -1,4 +1,4 @@
-module MapIt
+module SimpleAttributeMapper
   class Map
     def initialize(source_class)
       @source_class = source_class

@@ -1,4 +1,4 @@
-module MapIt
+module SimpleAttributeMapper
   class UnMappableError < StandardError
   end
 end

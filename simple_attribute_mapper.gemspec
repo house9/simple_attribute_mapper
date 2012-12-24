@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'map_it/version'
+require 'simple_attribute_mapper/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "map_it"
-  gem.version       = MapIt::VERSION
+  gem.name          = "simple_attribute_mapper"
+  gem.version       = SimpleAttributeMapper::VERSION
   gem.authors       = ["Jesse House"]
   gem.email         = ["jesse.house@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Maps attribute values from one object to another}
+  gem.summary       = %q{See the README for more information}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)

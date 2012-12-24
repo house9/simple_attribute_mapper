@@ -1,4 +1,4 @@
-module MapIt
+module SimpleAttributeMapper
   class Mapper
     def initialize(mappings = {})
       @mappings = mappings
