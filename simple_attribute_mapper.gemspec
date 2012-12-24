@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["jesse.house@gmail.com"]
   gem.description   = %q{Maps attribute values from one object to another}
   gem.summary       = %q{See the README for more information}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/house9/simple_attribute_mapper"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
