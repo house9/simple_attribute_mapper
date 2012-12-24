@@ -1,6 +1,6 @@
 # SimpleAttributeMapper
 
-TODO: Write a gem description
+Maps attributes values from one object to another
 
 ## Installation
 
@@ -18,7 +18,49 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+class Person
+  include Virtus
+
+  attribute :first_name, String
+  atrribute :last_name, String
+  attribute :email, String
+  attribute :home_phone, String
+end
+
+class User < ActiveRecord::Base
+  # first_name
+  # last_name
+  # user_name
+  # phone_number
+end
+```
+
+first_name and last_name will be automatically mapped
+
+specify additional mappings, i.e. user_name -> email
+
+```
+user = User.find(0000)
+user.user_name # => "test@example.com"
+mapper = SimpleAttributeMapper::Mapper.new({:user_name => :email})
+person = mapper.map(user, Person) # returns a new instance of Person 
+person.email # => "test@example.com"
+```
+
+## TODO
+
+* configure the mappings, i.e.
+
+```
+# configure once
+SimpleAttributeMapper.from(User).to(Person).with({:user_name => :email}).with({:phone_number => :home_phone})
+# use later
+person = SimpleAttributeMapper.map(user, Person)
+```
+
+* nested attribute mappings
+* composite mappings through lambdas
 
 ## Contributing
 

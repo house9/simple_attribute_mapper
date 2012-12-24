@@ -7,4 +7,8 @@ module SimpleAttributeMapper
   def self.from(source_class)
     Map.new(source_class)
   end
+
+  def self.map(source_instance, target_class)
+    raise "TODO: implement"
+  end
 end
