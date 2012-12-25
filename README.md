@@ -26,6 +26,7 @@ class Person
   atrribute :last_name, String
   attribute :email, String
   attribute :home_phone, String
+  attribute :mailing_address, String
 end
 
 class User < ActiveRecord::Base
@@ -33,6 +34,10 @@ class User < ActiveRecord::Base
   # last_name
   # user_name
   # phone_number
+  # street
+  # city
+  # state
+  # zip
 end
 ```
 
@@ -74,13 +79,13 @@ SimpleAttributeMapper.from(User).to(Person)
 SimpleAttributeMapper.from(User).to(Person).with({:user_name => :email})
 
 # map nested source to target
-# uses array syntax, User#mailing_address -> Address#country -> Country#name
+# use array; i.e. User#mailing_address -> Address#country -> Country#name
 SimpleAttributeMapper.from(User).to(Person).with({[:mailing_address, :country, :name] => :country_name})
+
+# map composite source to target
+# use lambda
+SimpleAttributeMapper.from(User).to(Person).with({ lambda { |source| "#{source.street}\n#{source.city}, #{source.state}\n#{source.zip}" } => :mailing_address})
 ```
-
-## TODO 
-
-* composite mappings through lambdas
 
 ## Contributing
 

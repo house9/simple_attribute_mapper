@@ -158,6 +158,8 @@ describe SimpleAttributeMapper::Mapper do
       attribute :foo, String
       attribute :abc, String
       attribute :address, Address
+      attribute :first_name, String
+      attribute :last_name, String
     end
 
     class Bar
@@ -167,6 +169,7 @@ describe SimpleAttributeMapper::Mapper do
       attribute :xyz, String
       attribute :city, String
       attribute :country_name, String
+      attribute :full_name, String
     end
 
     it "raises error when no source has no attributes" do
@@ -193,6 +196,15 @@ describe SimpleAttributeMapper::Mapper do
         foo = Foo.new(baz: "BAZ", address: Address.new(country: Country.new(name: "Foo Country")))
         bar = mapper.map(foo, Bar)
         bar.country_name.should == "Foo Country"
+      end
+    end
+
+    context "composite mapping" do
+      it "maps first and last to full name" do
+        mapper = SimpleAttributeMapper::Mapper.new({ lambda { |source| "#{source.first_name} #{source.last_name}" } => :full_name})
+        foo = Foo.new(first_name: "Frank", last_name: "Risso")
+        bar = mapper.map(foo, Bar)
+        bar.full_name.should == "Frank Risso"
       end
     end
 

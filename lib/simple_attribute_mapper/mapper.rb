@@ -41,6 +41,8 @@ module SimpleAttributeMapper
         source.send(mapping_key)
       elsif mapping_key.is_a?(Array)
         resolve_nested_value(mapping_key, source)
+      elsif mapping_key.is_a?(Proc)
+        mapping_key.call(source)
       else
         raise "Fatal, mapping for '#{mapping_key}' is unknown"
       end
