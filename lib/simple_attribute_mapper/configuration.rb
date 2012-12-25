@@ -20,6 +20,12 @@ module SimpleAttributeMapper
       add_mapping(map)
     end
 
+    def find_mapping(source_class, target_class)
+      maps.select do |map|
+        map.source_class == source_class && map.target_class == target_class
+      end
+    end
+
     # for testing only
     def clear
       @maps = []

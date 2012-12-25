@@ -1,9 +1,55 @@
 require 'spec_helper'
 
 describe SimpleAttributeMapper do
-  describe "configure" do
-    before(:each) { SimpleAttributeMapper.configure { |config| config.clear } }
+  before(:each) { SimpleAttributeMapper.configure { |config| config.clear } }
 
+  describe "map" do
+    class Foo
+      include Virtus
+
+      attribute :foo, String
+      attribute :abc, String
+      attribute :source_baz, String
+    end
+
+    class Bar
+      include Virtus
+
+      attribute :bar, String
+      attribute :abc, String
+      attribute :target_baz, String
+    end
+
+    let(:source) { Foo }
+    let(:target) { Bar }
+
+    it "raises when no mappings" do
+      maps = []
+      SimpleAttributeMapper.configuration.stub(:maps).and_return(maps)
+      instance = source.new(foo: "FOO", abc: "ABC")
+      expect { SimpleAttributeMapper.map(instance, target) }.to raise_error(SimpleAttributeMapper::ConfigurationError)
+    end
+
+    it "raises when no mappings for specified mapping" do
+      maps = [ SimpleAttributeMapper.from(source).to(target).with({source_baz: :target_baz}) ]
+      SimpleAttributeMapper.configuration.stub(:maps).and_return(maps)
+      instance = source.new(foo: "FOO", abc: "ABC")
+      new_target = Struct.new(:abc)
+      expect { SimpleAttributeMapper.map(instance, new_target) }.to raise_error(SimpleAttributeMapper::ConfigurationError)
+    end
+
+    it "maps" do
+      maps = [ SimpleAttributeMapper.from(source).to(target).with({source_baz: :target_baz}) ]
+      SimpleAttributeMapper.configuration.stub(:maps).and_return(maps)
+      source_instance = source.new(foo: "FOO", abc: "ABC", source_baz: "BAZ")
+      target_instance = SimpleAttributeMapper.map(source_instance, target)
+      target_instance.bar.should be_nil
+      target_instance.abc.should == "ABC"
+      target_instance.target_baz.should == "BAZ"
+    end
+  end
+
+  describe "configure" do
     describe "add_mapping" do
       let(:source) { Struct.new(:foo, :xyz) }
       let(:target) { Struct.new(:bar, :abc) }

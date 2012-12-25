@@ -1,7 +1,8 @@
 require "simple_attribute_mapper/version"
 require "simple_attribute_mapper/mapper"
-require "simple_attribute_mapper/un_mappable_error"
+require "simple_attribute_mapper/configuration_error"
 require "simple_attribute_mapper/duplicate_mapping_error"
+require "simple_attribute_mapper/un_mappable_error"
 require "simple_attribute_mapper/map"
 require "simple_attribute_mapper/configuration"
 
@@ -20,6 +21,16 @@ module SimpleAttributeMapper
   end
 
   def self.map(source_instance, target_class)
-    raise "TODO: implement"
+    if self.configuration.maps.length == 0
+      raise ConfigurationError.new("There are no mappings configured, check the documentation for configuration steps")
+    end
+
+    mappings = configuration.find_mapping(source_instance.class, target_class)
+    if mappings.length == 0
+      raise ConfigurationError.new("There are no mappings configured for '#{source_instance.class}' -> '#{target_class}'")
+    end
+
+    mapper = Mapper.new(mappings[0].mappings)
+    mapper.map(source_instance, target_class)
   end
 end
