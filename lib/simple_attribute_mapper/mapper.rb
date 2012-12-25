@@ -30,11 +30,34 @@ module SimpleAttributeMapper
     def map_specified_attributes(source, target)
       mappings.each do |source_attribute, target_attribute|
         attribute_writer = "#{target_attribute}=".to_sym
-        attribute_value = source.send(source_attribute)
-        # puts attribute_writer
-        # puts attribute_value
+        attribute_value = resolve_attribute_value(source_attribute, source)
+        # puts "#{attribute_writer} - #{attribute_value}"
         target.send(attribute_writer, attribute_value)
       end
     end
+
+    def resolve_attribute_value(mapping_key, source)
+      if mapping_key.is_a?(Symbol)
+        source.send(mapping_key)
+      elsif mapping_key.is_a?(Array)
+        resolve_nested_value(mapping_key, source)
+      else
+        raise "Fatal, mapping for '#{mapping_key}' is unknown"
+      end
+    end
+
+    def resolve_nested_value(mapping_key, source)
+      root_key = mapping_key.shift
+      current = source.send(root_key)
+
+      mapping_key.each do |nested|
+        value = current.send(nested)
+        if nested == mapping_key.last
+          return value
+        end
+        current = value
+      end
+    end
+
   end
 end

@@ -135,12 +135,29 @@ describe SimpleAttributeMapper::Mapper do
   end
 
   describe "map" do
+    class Country
+      include Virtus
+
+      attribute :name, String
+    end
+
+    class Address
+      include Virtus
+
+      attribute :street, String
+      attribute :city, String
+      attribute :state, String
+      attribute :zip, String
+      attribute :country, Country
+    end
+
     class Foo
       include Virtus
 
       attribute :baz, String
       attribute :foo, String
       attribute :abc, String
+      attribute :address, Address
     end
 
     class Bar
@@ -148,6 +165,8 @@ describe SimpleAttributeMapper::Mapper do
 
       attribute :baz, String
       attribute :xyz, String
+      attribute :city, String
+      attribute :country_name, String
     end
 
     it "raises error when no source has no attributes" do
@@ -159,6 +178,22 @@ describe SimpleAttributeMapper::Mapper do
       foo = Foo.new({baz: "BAZ"})
       bar = mapper.map(foo, Bar)
       bar.baz.should == "BAZ"
+    end
+
+    context "mapping nested attributes" do
+      it "maps 1 level deep" do
+        mapper = SimpleAttributeMapper::Mapper.new({[:address, :city] => :city})
+        foo = Foo.new({baz: "BAZ", address: Address.new(city: "Foo City")})
+        bar = mapper.map(foo, Bar)
+        bar.city.should == "Foo City"
+      end
+
+      it "goes deeper" do
+        mapper = SimpleAttributeMapper::Mapper.new({[:address, :country, :name] => :country_name})
+        foo = Foo.new(baz: "BAZ", address: Address.new(country: Country.new(name: "Foo Country")))
+        bar = mapper.map(foo, Bar)
+        bar.country_name.should == "Foo Country"
+      end
     end
 
     it "does not map when no target attribute" do

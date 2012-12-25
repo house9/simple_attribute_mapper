@@ -64,9 +64,22 @@ person = SimpleAttributeMapper.map(user, Person)
 
 ```
 
+### Mapping options
+
+```
+# default, maps all matching attributes
+SimpleAttributeMapper.from(User).to(Person)
+
+# map source to target
+SimpleAttributeMapper.from(User).to(Person).with({:user_name => :email})
+
+# map nested source to target
+# uses array syntax, User#mailing_address -> Address#country -> Country#name
+SimpleAttributeMapper.from(User).to(Person).with({[:mailing_address, :country, :name] => :country_name})
+```
+
 ## TODO 
 
-* nested attribute mappings
 * composite mappings through lambdas
 
 ## Contributing
