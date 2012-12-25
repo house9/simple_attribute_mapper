@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = SimpleAttributeMapper::VERSION
   gem.authors       = ["Jesse House"]
   gem.email         = ["jesse.house@gmail.com"]
-  gem.description   = %q{Maps attribute values from one object to another}
+  gem.description   = %q{Maps attribute values from one object to another. See the README on github for more information}
   gem.summary       = %q{See the README for more information}
   gem.homepage      = "https://github.com/house9/simple_attribute_mapper"
 
