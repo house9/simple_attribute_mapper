@@ -1,6 +1,7 @@
 require "simple_attribute_mapper/version"
 require "simple_attribute_mapper/mapper"
 require "simple_attribute_mapper/un_mappable_error"
+require "simple_attribute_mapper/duplicate_mapping_error"
 require "simple_attribute_mapper/map"
 require "simple_attribute_mapper/configuration"
 
