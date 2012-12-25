@@ -88,12 +88,32 @@ describe SimpleAttributeMapper::Mapper do
   end
 end
 
-describe "Building a mapping" do
-  let(:source) { Struct.new(:foo) }
-  let(:target) { Struct.new(:bar) }
+describe "Configure" do
+  before(:each) { SimpleAttributeMapper.configure { |config| config.clear } }
 
-  it "is built" do
-    map = SimpleAttributeMapper.from(source).to(target).with({foo: :bar}).with(xyz: :abc)
-    map.should be_an_instance_of(SimpleAttributeMapper::Map)
+  it "adds to the configured maps" do
+    SimpleAttributeMapper.configure do |config|
+      config.add_mapping(OpenStruct.new({foo: "FOO"}))
+      config.add_mapping(OpenStruct.new({bar: "BAR"}))
+    end
+
+    SimpleAttributeMapper.configuration.maps.length.should == 2
+  end
+
+  context "builds the mappings" do
+    let(:source)  { Struct.new(:foo, :xyz) }
+    let(:target1) { Struct.new(:bar, :abc) }
+    let(:target2) { Struct.new(:baz)       }
+    let(:target3) { Struct.new(:foo, :xyz) }
+
+    it "is built" do
+      SimpleAttributeMapper.configure do |config|
+        config << SimpleAttributeMapper.from(source).to(target1).with({foo: :bar}).with(xyz: :abc)
+        config << SimpleAttributeMapper.from(source).to(target2).with({foo: :baz})
+        config << SimpleAttributeMapper.from(source).to(target3)
+      end
+      SimpleAttributeMapper.configuration.maps.length.should == 3
+      SimpleAttributeMapper.configuration.maps[0].should be_an_instance_of(SimpleAttributeMapper::Map)
+    end
   end
 end
