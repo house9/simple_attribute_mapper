@@ -44,20 +44,27 @@ specify additional mappings, i.e. user_name -> email
 user = User.find(0000)
 user.user_name # => "test@example.com"
 mapper = SimpleAttributeMapper::Mapper.new({:user_name => :email})
-person = mapper.map(user, Person) # returns a new instance of Person 
+person = mapper.map(user, Person) # returns a new instance of Person
 person.email # => "test@example.com"
 ```
 
-## TODO
+Typically you won't create instances of SimpleAttributeMapper::Mapper in your code, instead you will configure all mappings and use `SimpleAttributeMapper.map`, see below
 
-* configure the mappings, i.e.
+### Configuration
 
 ```
-# configure once
-SimpleAttributeMapper.from(User).to(Person).with({:user_name => :email}).with({:phone_number => :home_phone})
-# use later
+# in rails: config/initializers/simple_attribute_mapper_config.rb
+SimpleAttributeMapper.configure do |config|
+  config << SimpleAttributeMapper.from(User).to(Person).with({:user_name => :email}).with({:phone_number => :home_phone})
+end
+
+# use later in application to map 
+user = User.find(0000)
 person = SimpleAttributeMapper.map(user, Person)
+
 ```
+
+## TODO 
 
 * nested attribute mappings
 * composite mappings through lambdas
