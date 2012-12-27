@@ -1,5 +1,7 @@
 # SimpleAttributeMapper
 
+[![Build Status](https://travis-ci.org/house9/simple_attribute_mapper.png)](https://travis-ci.org/house9/simple_attribute_mapper) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/house9/simple_attribute_mapper)
+
 Maps attributes values from one object to another
 
 ## Installation
