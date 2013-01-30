@@ -47,6 +47,17 @@ describe SimpleAttributeMapper do
       target_instance.abc.should == "ABC"
       target_instance.target_baz.should == "BAZ"
     end
+
+    it "maps attributes on instance" do
+      maps = [ SimpleAttributeMapper.from(source).to(target).with({source_baz: :target_baz}) ]
+      SimpleAttributeMapper.configuration.stub(:maps).and_return(maps)
+      source_instance = source.new(foo: "FOO", abc: "ABC", source_baz: "BAZ")
+      target_instance = target.new(abc: "ABC", target_baz: "ORIGINAL")
+      target_instance = SimpleAttributeMapper.map_attributes(source_instance, target_instance)
+      target_instance.bar.should be_nil
+      target_instance.abc.should == "ABC"
+      target_instance.target_baz.should == "BAZ"
+    end
   end
 
   describe "configure" do
@@ -134,7 +145,7 @@ describe SimpleAttributeMapper::Mapper do
     SimpleAttributeMapper::Mapper.new.should be_an_instance_of(SimpleAttributeMapper::Mapper)
   end
 
-  describe "map" do
+  describe "map and map_attributes" do
     class Country
       include Virtus
 
@@ -180,6 +191,14 @@ describe SimpleAttributeMapper::Mapper do
       mapper = SimpleAttributeMapper::Mapper.new
       foo = Foo.new({baz: "BAZ"})
       bar = mapper.map(foo, Bar)
+      bar.baz.should == "BAZ"
+    end
+
+    it "maps attributes on an existing instance" do
+      mapper = SimpleAttributeMapper::Mapper.new
+      foo = Foo.new({baz: "BAZ"})
+      bar = Bar.new({baz: "ORIGINAL"})
+      bar = mapper.map_attributes(foo, bar)
       bar.baz.should == "BAZ"
     end
 

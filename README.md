@@ -25,7 +25,7 @@ class Person
   include Virtus
 
   attribute :first_name, String
-  atrribute :last_name, String
+  attribute :last_name, String
   attribute :email, String
   attribute :home_phone, String
   attribute :mailing_address, String
@@ -51,7 +51,14 @@ specify additional mappings, i.e. user_name -> email
 user = User.find(0000)
 user.user_name # => "test@example.com"
 mapper = SimpleAttributeMapper::Mapper.new({:user_name => :email})
-person = mapper.map(user, Person) # returns a new instance of Person
+
+# map returns a new instance of Person
+person = mapper.map(user, Person)
+person.email # => "test@example.com"
+
+# map_attributes will map onto an existing instance
+person = Person.new({email: "foo@bar.com"})
+person = mapper.map_attributes(user, person)
 person.email # => "test@example.com"
 ```
 
@@ -65,7 +72,7 @@ SimpleAttributeMapper.configure do |config|
   config << SimpleAttributeMapper.from(User).to(Person).with({:user_name => :email}).with({:phone_number => :home_phone})
 end
 
-# use later in application to map 
+# use later in application to map
 user = User.find(0000)
 person = SimpleAttributeMapper.map(user, Person)
 

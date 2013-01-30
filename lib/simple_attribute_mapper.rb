@@ -21,6 +21,14 @@ module SimpleAttributeMapper
   end
 
   def self.map(source_instance, target_class)
+    mapper_for(source_instance, target_class).map(source_instance, target_class)
+  end
+
+  def self.map_attributes(source_instance, target_instance)
+    mapper_for(source_instance, target_instance.class).map_attributes(source_instance, target_instance)
+  end
+
+  def self.mapper_for(source_instance, target_class)
     if self.configuration.maps.length == 0
       raise ConfigurationError.new("There are no mappings configured, check the documentation for configuration steps")
     end
@@ -30,7 +38,6 @@ module SimpleAttributeMapper
       raise ConfigurationError.new("There are no mappings configured for '#{source_instance.class}' -> '#{target_class}'")
     end
 
-    mapper = Mapper.new(mappings[0].mappings)
-    mapper.map(source_instance, target_class)
+    Mapper.new(mappings[0].mappings)
   end
 end

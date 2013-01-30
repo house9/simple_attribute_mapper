@@ -7,13 +7,16 @@ module SimpleAttributeMapper
     attr_reader :mappings
 
     def map(source, target_class)
+      map_attributes(source, target_class.new)
+    end
+
+    def map_attributes(source, target_instance)
       raise UnMappableError.new("source has no attributes") unless source.respond_to?(:attributes)
 
-      target = target_class.new
-      map_matching_attributes(source, target)
-      map_specified_attributes(source, target)
+      map_matching_attributes(source, target_instance)
+      map_specified_attributes(source, target_instance)
 
-      target
+      target_instance
     end
 
     def map_matching_attributes(source, target)
